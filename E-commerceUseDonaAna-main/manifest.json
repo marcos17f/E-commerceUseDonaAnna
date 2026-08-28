@@ -1,0 +1,17 @@
+{
+  "name": "Use Dona Anna",
+  "short_name": "Use Dona Anna",
+  "description": "Sandálias femininas selecionadas, havaianas personalizadas e bolsas de ladinho.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF6F4",
+  "theme_color": "#C65B78",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "assets/favicon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}
