@@ -324,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rotate: "25deg",
       stagger: 0.15,
       duration: 1,
-      ease: "back.out(1.6)",
+      ease: "back.out(1.2)",
       delay: 0.2,
     });
     gsap.to(".hf-item", {
