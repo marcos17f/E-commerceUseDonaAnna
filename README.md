@@ -1,130 +1,163 @@
 # Use Dona Anna — Site
 
-Site estático (HTML + CSS puro + JS vanilla, sem build/framework) para a loja
-**Use Dona Anna** — sandálias femininas selecionadas, salto alto, havaianas e
-bolsas. Sem back-end: carrinho salvo em `localStorage`, checkout via link do
-WhatsApp.
+Site da loja **Use Dona Anna** — sandálias femininas selecionadas, salto alto,
+havaianas e bolsas. Sem back-end: carrinho salvo em `localStorage`, checkout
+via link do WhatsApp.
 
-## ⚠️ Antes de publicar — troque isto
+## Stack
 
-**1. TODAS as fotos de produto agora são de banco de imagens (Unsplash).**
-A seu pedido, troquei também as fotos reais que você tinha mandado
-(havaianas e carteiras) por fotos de banco — agora **nenhuma foto de
-produto no site é da loja de verdade**, todas vêm do Unsplash, carregadas
-direto pela internet (`https://images.unsplash.com/...`):
-- "woman in orange and brown leather open toe sandals" — Shahzad Faisal (sandália)
-- "pair of maroon wedges" — Irene Kredenets (salto)
-- "black and green flip flops on sand" — Vi Vi (havaiana)
-- "a brown leather wallet on a black background" — achmad adi wiratama (carteira masculina)
-- "person holding brown leather wallet" — Emil Kalibradov (carteira feminina)
-- "pink leather crossbody bag" — Creative Headline / @6.tiff (bolsa de ladinho)
-
-Todas sob [Unsplash License](https://unsplash.com/license) (uso comercial
-livre, sem exigência de crédito). **Importante**: são fotos genéricas, não
-as peças reais da loja — troque pelas fotos verdadeiras antes de publicar
-de verdade. Como carregam da internet (não estão salvas localmente), o
-site deixa de funcionar 100% offline enquanto elas estiverem em uso. A
-única imagem real que permanece é a **logo da marca**
-(`assets/logo-mark.png`), usada no header, rodapé e favicon.
-
-Pra trocar: troque o `src` da tag `<img>` correspondente em `index.html`, o
-campo `img` no array `PRODUCTS` em `js/script.js`, e a URL usada em
-`.story-media img` — todos indicados nos comentários do código.
-
-**2. Número de WhatsApp já configurado.**
-Está como `5589981024094` (89 98102-4094) em todos os links do site — barra de
-info, botão flutuante, rodapé e no botão "Finalizar pedido no WhatsApp" do
-carrinho (`js/script.js` → `window.STORE_WHATSAPP`). Se precisar trocar,
-mantenha o formato 55 + DDD + número, só dígitos, e atualize nesses mesmos
-lugares.
-
-A mensagem enviada pelo carrinho já vem com nome do produto, quantidade,
-valor total e uma pergunta final perguntando se a cliente quer finalizar a
-compra ou alterar algo — dá pra editar o texto em `buildWhatsAppMessage()`
-dentro de `js/script.js`.
-
-**3. Preços e produtos são de exemplo.**
-O catálogo inteiro vive em `js/script.js`, no array `PRODUCTS` — é o "banco
-de dados" do site. Edite nome, preço, imagem, badge (`Novo` / `Best seller` /
-`Outlet`), preço antigo (pra mostrar desconto), avaliação e nº de reviews
-diretamente ali.
+- **Next.js (App Router) + React + TypeScript**
+- **Tailwind CSS** (v4 — tokens de cor em `app/globals.css`)
+- **Framer Motion** para as animações
+- Fontes via `next/font`: **Plus Jakarta Sans** (títulos) e **Work Sans** (texto)
+- Imagens em `public/`, servidas com `next/image`
 
 ## Rodar localmente
 
-Não precisa de build. Basta abrir `index.html` no navegador, ou servir a
-pasta com qualquer servidor estático:
+Precisa de Node.js 20.9 ou superior.
 
 ```
-npx serve .
+npm install
+npm run dev
 ```
 
-## Subir pro GitHub
+Abra `http://localhost:3000`. Para testar a versão de produção:
 
 ```
-git init
-git add .
-git commit -m "Site Use Dona Anna"
+npm run build
+npm start
 ```
 
-Crie um repositório vazio no GitHub (sem README/gitignore, pra não dar
-conflito) e depois:
+## Onde editar o conteúdo
 
-```
-git remote add origin https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
-git branch -M main
-git push -u origin main
-```
+**Tudo fica em um arquivo só: `data/site.ts`.** Os componentes apenas leem
+esses dados — não é preciso mexer neles para trocar texto, preço ou foto.
 
-## Subir pro Vercel
+| O que | Onde em `data/site.ts` |
+| --- | --- |
+| Nome, WhatsApp, e-mail, Instagram, domínio | `store` |
+| Parcelas sem juros e desconto do Pix | `INSTALLMENTS`, `PIX_DISCOUNT` |
+| Faixa animada do topo | `ticker` |
+| Menu | `navLinks` |
+| Hero (título, texto, botões, números, peças do leque) | `hero` |
+| Categorias | `categories` |
+| Produtos (nome, preço, foto, badge, avaliação) | `products` |
+| Vitrines (Lançamentos, Mais vendidos, Outlet) | `productSections` |
+| Faixa de preço, benefícios, blog, depoimentos | `priceRanges`, `benefits`, `blog`, `reviews` |
+| Newsletter, rodapé, textos do carrinho, cookies, 404 | `newsletter`, `footer`, `cartTexts`, `cookies`, `notFound` |
 
-1. Entre em [vercel.com](https://vercel.com), faça login com sua conta do
-   GitHub.
-2. **Add New Project** → selecione o repositório que você acabou de subir.
-3. Framework preset: **Other** (site estático). Não precisa configurar
-   build command nem output directory — o `vercel.json` incluído já cuida
-   de URLs limpas e cache dos assets.
-4. Clique em **Deploy**. Em ~30 segundos o site fica no ar num link tipo
-   `seu-projeto.vercel.app`.
-5. Pra usar domínio próprio depois: **Settings → Domains** no painel do
-   projeto na Vercel.
+### Produtos
 
-Qualquer novo `git push` pra branch `main` atualiza o site automaticamente.
+O array `products` é o "banco de dados" do site. Cada peça tem `name`,
+`price`, `img`, `tag` (`Novo` / `Best seller` / `Outlet`), `oldPrice` (preço
+antigo, mostra o selo de desconto), `rating`, `reviews` e `section` (em qual
+vitrine aparece). O preço parcelado e o preço no Pix são calculados sozinhos.
 
-## Acabamentos "profissionais" incluídos
+### WhatsApp
 
-- **SEO**: meta description, palavras-chave, Open Graph e Twitter Card (pra
-  quando o link for compartilhado no WhatsApp/Instagram mostrar foto e
-  texto bonitos), dados estruturados (JSON-LD tipo `ClothingStore`, ajuda o
-  Google a entender que é uma loja).
-- **`robots.txt`** e **`sitemap.xml`**: liberam a indexação pelo Google.
-  **Troque o domínio placeholder** (`usedonaanna.com.br`) por um domínio
-  real nesses dois arquivos e no `<link rel="canonical">` do `index.html`
-  assim que a loja tiver domínio próprio.
-- **`manifest.json`**: permite "instalar" o site como app no celular
-  (ícone na tela inicial).
-- **`404.html`**: página de erro com a cara da marca em vez da página
-  genérica do navegador.
-- **Aviso de cookies (LGPD)**: banner simples que aparece uma vez e lembra
-  a escolha (`localStorage`). O link "Política de Privacidade" ainda
-  precisa apontar pra uma página de política real.
-- **Acessibilidade**: link "Pular para o conteúdo" (útil pra quem navega
-  só com teclado ou leitor de tela).
-- **Responsivo em todas as telas**: breakpoints pra celular pequeno
-  (≤480px), celular/tablet (≤760px), tablet largo/notebook (≤1200px) e
-  telas grandes (≥1600px) — testado sem gerar rolagem horizontal.
+O número está em `store.whatsapp` (formato: 55 + DDD + número, só dígitos) e
+vale para todos os links do site e para o botão "Finalizar pedido no
+WhatsApp". A mensagem do pedido leva nome do produto, quantidade, valor total
+e a pergunta final — os textos estão em `cartTexts`.
+
+## ⚠️ Antes de publicar — troque isto
+
+**1. As fotos de produto são de banco de imagens (Unsplash).**
+São as mesmas fotos que o site já usava, agora salvas em `public/images/`
+(antes carregavam direto de `images.unsplash.com`):
+
+- `sandalia*.jpg` — "woman in orange and brown leather open toe sandals" — Shahzad Faisal
+- `salto*.jpg` — "pair of maroon wedges" — Irene Kredenets
+- `havaiana.jpg` — "black and green flip flops on sand" — Vi Vi
+- `carteira-masculina.jpg` — "a brown leather wallet on a black background" — achmad adi wiratama
+- `carteira-feminina.jpg` — "person holding brown leather wallet" — Emil Kalibradov
+- `bolsa.jpg` — "pink leather crossbody bag" — Creative Headline / @6.tiff
+
+Todas sob [Unsplash License](https://unsplash.com/license) (uso comercial
+livre, sem exigência de crédito). **São fotos genéricas, não as peças reais
+da loja.** Para trocar: coloque a foto nova em `public/images/` e aponte o
+campo `img` correspondente em `data/site.ts`. A única imagem real é a
+**logo** (`public/assets/logo-mark.png`).
+
+**2. Preços e produtos são de exemplo.** Edite em `data/site.ts`.
+
+**3. Domínio.** O endereço atual (`e-commerce-use-dona-ana.vercel.app`) está
+em `store.url` (`data/site.ts`), em `public/robots.txt` e em
+`public/sitemap.xml`. Troque nos três quando a loja tiver domínio próprio.
+
+**4. Links ainda sem página.** "Sobre a loja", "Trocas e devoluções",
+"Política de privacidade", "Termos de uso", "Como comprar", "Tabela de
+tamanhos", "Rastrear pedido" e os "Ler mais" do blog apontam para `#`.
+
+## Deploy na Vercel
+
+1. Entre em [vercel.com](https://vercel.com) com sua conta do GitHub.
+2. **Add New Project** → selecione este repositório.
+3. O `vercel.json` já define `"framework": "nextjs"`, então a Vercel usa o
+   build do Next.js (sem isso o projeto, que antes era um site estático com
+   preset "Other", publicaria uma pasta vazia e daria 404). Se o projeto já
+   existe na Vercel, confira em **Settings → Build & Deployment** que o
+   *Framework Preset* é **Next.js** e que *Output Directory* está vazio.
+4. **Deploy**. Qualquer `git push` para a branch `main` atualiza o site.
+
+## Animações
+
+- **Hero**: título centralizado com as palavras aparecendo uma a uma e, logo
+  abaixo, um leque de três fotos inclinadas (peças do catálogo, com nome e
+  preço) com parallax leve no scroll, seguido da faixa com três números de
+  destaque. As peças do leque são escolhidas em `hero.featured`.
+- **Seções e cards** aparecem ao rolar a página, em cascata
+  (`components/motion.tsx` → `Reveal`, `Stagger`, `StaggerItem`).
+- **Menu mobile e carrinho** abrem e fecham animados.
+- **Hover** nos cards e botões.
+- **`prefers-reduced-motion`** é respeitado: sem parallax,
+  sem ticker/flutuação, e as entradas viram um fade simples.
+
+## Outros acabamentos
+
+- **SEO**: meta description, palavras-chave, Open Graph, Twitter Card e dados
+  estruturados JSON-LD (`ClothingStore`) — em `app/layout.tsx` e `app/page.tsx`.
+- **`robots.txt`**, **`sitemap.xml`** e **`manifest.json`** em `public/`.
+- **Página 404** com a cara da marca (`app/not-found.tsx`).
+- **Aviso de cookies (LGPD)**: aparece uma vez e lembra a escolha
+  (`localStorage`).
+- **Acessibilidade**: link "Pular para o conteúdo", foco visível, carrinho
+  fecha com Esc.
+- **Responsivo**: celular, tablet e desktop, sem rolagem horizontal.
 
 ## Estrutura
 
 ```
-index.html
-404.html
-manifest.json
-robots.txt
-sitemap.xml
-css/style.css
-js/script.js
-assets/
-  logo-mark.png, favicon.png
-  products/
-    cat-havaianas.jpg, cat-bolsas.jpg
+app/
+  layout.tsx        fontes, metadados (SEO), providers
+  page.tsx          monta a página com as seções, na ordem
+  not-found.tsx     página 404
+  globals.css       Tailwind + paleta de cores
+components/         um componente por seção
+  TopBars.tsx       faixa animada + barra de contato
+  Header.tsx        cabeçalho + menu mobile
+  Hero.tsx
+  Categories.tsx
+  Essence.tsx       "Nossa essência"
+  Highlights.tsx    "As queridinhas da vez"
+  Story.tsx         "Nosso cuidado"
+  ProductSection.tsx  vitrines + card de produto
+  PriceRange.tsx
+  Benefits.tsx
+  Blog.tsx
+  Reviews.tsx
+  Newsletter.tsx
+  Footer.tsx
+  Floating.tsx      botão do WhatsApp, voltar ao topo, aviso de cookies
+  CartProvider.tsx  estado do carrinho (localStorage) + mensagem do WhatsApp
+  CartDrawer.tsx    sacola lateral
+  motion.tsx        animações reutilizáveis
+data/
+  site.ts           TODO o conteúdo do site
+lib/
+  format.ts         formatação de preço e estrelas
+public/
+  assets/           logo e favicon
+  images/           fotos de produto
+vercel.json
 ```

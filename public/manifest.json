@@ -9,7 +9,7 @@
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "assets/favicon.png",
+      "src": "/assets/favicon.png",
       "sizes": "128x128",
       "type": "image/png"
     }
